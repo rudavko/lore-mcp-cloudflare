@@ -1,7 +1,11 @@
+/**
+ * For more details on how to configure Wrangler, refer to:
+ * https://developers.cloudflare.com/workers/wrangler/configuration/
+ */
 {
 	"$schema": "node_modules/wrangler/config-schema.json",
-	"name": "lore-mcp-cloudflare",
-	"main": "src/index.ts",
+	"name": "lore-mcp",
+	"main": "src/index.js",
 	"compatibility_date": "2025-03-10",
 	"compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
 	"vars": {},

@@ -1,4 +1,4 @@
-import worker, { LoreMcp } from "../../lore-mcp/src/index.js";
+import worker, { LoreMcp } from "./index.js";
 
 export { LoreMcp };
 

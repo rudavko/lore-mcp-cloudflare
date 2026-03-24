@@ -3,12 +3,25 @@
   "version": "0.0.1",
   "private": true,
   "type": "module",
+  "main": "./src/index.js",
   "scripts": {
     "dev": "wrangler dev",
     "deploy": "wrangler deploy",
-    "test": "bun test"
+    "start": "wrangler dev",
+    "cf-typegen": "wrangler types",
+    "build-hash": "node scripts/buildHash.js",
+    "install-workflow": "bun scripts/installWorkflow.js",
+    "test": "NODE_PATH=../lore-mcp/node_modules bun test"
+  },
+  "dependencies": {
+    "@cloudflare/workers-oauth-provider": "^0.2.3",
+    "@simplewebauthn/server": "^13.2.2",
+    "agents": "^0.4.0",
+    "qrcode-svg": "^1.1.0",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
+    "@types/bun": "^1.3.9",
     "wrangler": "^4.64.0"
   }
 }
