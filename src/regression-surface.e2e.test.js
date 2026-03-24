@@ -1,6 +1,6 @@
 /** @implements FR-001 — Black-box e2e regression contracts for auth/admin surfaces. */
 import { describe, expect, test } from "bun:test";
-import { AUTO_UPDATES_LINK_PREFIX } from "../../lore-mcp/src/domain/auto-updates-link.pure.js";
+import { AUTO_UPDATES_LINK_PREFIX } from "lore-mcp/domain/auto-updates-link.pure.js";
 import {
 	buildAuthorizePath,
 	createCtx,

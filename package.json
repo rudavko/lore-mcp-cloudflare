@@ -11,12 +11,13 @@
     "cf-typegen": "wrangler types",
     "build-hash": "node scripts/buildHash.js",
     "install-workflow": "bun scripts/installWorkflow.js",
-    "test": "NODE_PATH=../lore-mcp/node_modules bun test"
+    "test": "bun test"
   },
   "dependencies": {
     "@cloudflare/workers-oauth-provider": "^0.2.3",
     "@simplewebauthn/server": "^13.2.2",
     "agents": "^0.4.0",
+    "lore-mcp": "github:rudavko/lore-mcp#929ab036a2bcf1474759b734b9d659c88af433ee",
     "qrcode-svg": "^1.1.0",
     "zod": "^4.3.6"
   },

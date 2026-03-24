@@ -1,5 +1,5 @@
 /** @implements FR-002 — Host adapter builders for semantic search and embedding sync. */
-import { parseSemanticMinScore } from "../../../lore-mcp/src/wiring/runtime-value-helpers.orch.3.js";
+import { parseSemanticMinScore } from "lore-mcp/wiring/runtime-value-helpers.orch.3.js";
 
 function hasSemanticSearchCapability({ aiRun, vectorQuery }) {
 	return !!(aiRun && vectorQuery);

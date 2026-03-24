@@ -5,7 +5,7 @@ import {
 	createSyncEmbeddingPort,
 	hasSemanticSearchCapability,
 } from "./runtime-search-host.orch.4.js";
-import { createGlobalTestStd } from "../../../lore-mcp/src/test-helpers/runtime.shared.test.js";
+import { createGlobalTestStd } from "lore-mcp/test-helpers/runtime.shared.test.js";
 
 const std = createGlobalTestStd(globalThis);
 

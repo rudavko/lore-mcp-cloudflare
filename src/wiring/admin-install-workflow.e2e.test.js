@@ -1,13 +1,13 @@
 /** @implements FR-001 — Route-level e2e regression for admin install-workflow with this-sensitive runtime APIs. */
 import { expect, test } from "bun:test";
-import { registerAdminRoutes } from "../../../lore-mcp/src/admin.orch.1.js";
-import { renderInstallWorkflowPage } from "../../../lore-mcp/src/templates/install-workflow.pure.js";
+import { registerAdminRoutes } from "lore-mcp/admin.orch.1.js";
+import { renderInstallWorkflowPage } from "lore-mcp/templates/install-workflow.pure.js";
 import { makeDefaultHandlerFetch } from "./default-handler.orch.1.js";
 import { makeInstallWorkflowToRepoRuntime } from "./github-workflow-adapter.efct.js";
-import { installWorkflowToRepo } from "../../../lore-mcp/src/domain/github-workflow.ops.efct.js";
-import { normalizeRepoFullName, parseTargetRepo, renderWorkflowYaml } from "../../../lore-mcp/src/domain/github-workflow.pure.js";
-import { AUTO_UPDATES_LINK_PREFIX } from "../../../lore-mcp/src/domain/auto-updates-link.pure.js";
-import { extractHiddenInputValue } from "../../../lore-mcp/src/test-helpers/html-scrape.test.js";
+import { installWorkflowToRepo } from "lore-mcp/domain/github-workflow.ops.efct.js";
+import { normalizeRepoFullName, parseTargetRepo, renderWorkflowYaml } from "lore-mcp/domain/github-workflow.pure.js";
+import { AUTO_UPDATES_LINK_PREFIX } from "lore-mcp/domain/auto-updates-link.pure.js";
+import { extractHiddenInputValue } from "lore-mcp/test-helpers/html-scrape.test.js";
 import {
 	createDefaultHandlerDeps,
 	createMemoryKv,
@@ -17,7 +17,7 @@ import {
 import {
 	applySetCookies,
 	buildCookieHeader,
-} from "../../../lore-mcp/src/test-helpers/http-cookies.test.js";
+} from "lore-mcp/test-helpers/http-cookies.test.js";
 
 function createSensitiveBtoa() {
 	return () => {

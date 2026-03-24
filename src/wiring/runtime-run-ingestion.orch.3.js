@@ -5,10 +5,10 @@ import {
 	noThrowValidation,
 	nowIso,
 	validationError,
-} from "../../../lore-mcp/src/wiring/runtime-value-helpers.orch.3.js";
+} from "lore-mcp/wiring/runtime-value-helpers.orch.3.js";
 import { createRunIngestionHostDeps } from "./runtime-ingestion-host.orch.4.js";
-import { buildIngestionOps } from "../../../lore-mcp/src/wiring/runtime-ingestion.orch.3.js";
-import { createUlidGenerator, makeNotifyResourceChange } from "../../../lore-mcp/src/wiring/runtime-surface.orch.3.js";
+import { buildIngestionOps } from "lore-mcp/wiring/runtime-ingestion.orch.3.js";
+import { createUlidGenerator, makeNotifyResourceChange } from "lore-mcp/wiring/runtime-surface.orch.3.js";
 
 function makeRunLoreIngestion(deps) {
 	const generateId = createUlidGenerator(

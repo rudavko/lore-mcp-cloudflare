@@ -1,6 +1,6 @@
 /** @implements FR-001 — Host adapter builder for tool-layer env/binding concerns. */
-import { parsePositiveInteger } from "../../../lore-mcp/src/wiring/runtime-value-helpers.orch.3.js";
-import { safeStringEqual } from "../../../lore-mcp/src/lib/constant-time-equal.pure.js";
+import { parsePositiveInteger } from "lore-mcp/wiring/runtime-value-helpers.orch.3.js";
+import { safeStringEqual } from "lore-mcp/lib/constant-time-equal.pure.js";
 
 function resolveBuildHash(env) {
 	const candidates = [env.BUILD_HASH, env.WORKERS_CI_COMMIT_SHA, env.CF_PAGES_COMMIT_SHA];

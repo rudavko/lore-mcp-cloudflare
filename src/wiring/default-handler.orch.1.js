@@ -1,5 +1,5 @@
 /** @implements FR-001 — Orchestrate default auth route handling via injected runtime dependencies. */
-import { createDefaultHandlerHelpers } from "../../../lore-mcp/src/wiring/default-handler-helpers.orch.2.js";
+import { createDefaultHandlerHelpers } from "lore-mcp/wiring/default-handler-helpers.orch.2.js";
 import {
 	createDefaultHandlerAdminRouteDeps,
 	createPrefixedRouter,
@@ -7,7 +7,7 @@ import {
 import { createDefaultHandlerAuthRouteDeps } from "./default-handler-auth-adapter.orch.3.js";
 import { createDefaultHandlerHost } from "./default-handler-host.orch.3.js";
 import { createDefaultHandlerRequestContext } from "./default-handler-request-context.orch.2.js";
-import { registerDefaultHandlerRoutes } from "../../../lore-mcp/src/wiring/default-handler-routes.orch.2.js";
+import { registerDefaultHandlerRoutes } from "lore-mcp/wiring/default-handler-routes.orch.2.js";
 
 export const makeDefaultHandlerFetch = (deps) => {
 	const {

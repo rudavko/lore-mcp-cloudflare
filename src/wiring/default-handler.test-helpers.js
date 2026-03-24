@@ -8,14 +8,14 @@ import {
 	lockKey,
 	LOCKOUT_TTL_SECONDS,
 	nextFailCount,
-} from "../../../lore-mcp/src/lib/auth-helpers.pure.js";
+} from "lore-mcp/lib/auth-helpers.pure.js";
 import {
 	buildStoredCredentialData,
 	challengeKey,
 	CHALLENGE_TTL_SECONDS,
 	parseStoredCredentialData,
 	PASSKEY_CRED_KEY,
-} from "../../../lore-mcp/src/webauthn.pure.js";
+} from "lore-mcp/webauthn.pure.js";
 import {
 	base32Decode,
 	base32Encode,
@@ -24,8 +24,8 @@ import {
 	counterToBytes,
 	extractHotpCode,
 	validateTotpFormat,
-} from "../../../lore-mcp/src/totp.pure.js";
-export { readSetCookies } from "../../../lore-mcp/src/test-helpers/http-cookies.test.js";
+} from "lore-mcp/totp.pure.js";
+export { readSetCookies } from "lore-mcp/test-helpers/http-cookies.test.js";
 export { createMemoryKv } from "../test-helpers/http-kv-context.test.js";
 
 export const RequestCtor = globalThis.Request;

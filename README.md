@@ -13,7 +13,7 @@ Why it exists:
 
 ## Current shape
 
-- `src/index.ts` is a temporary bridge into `../../lore-mcp/src/index.js`
+- `src/index.ts` is the Cloudflare entrypoint that consumes the `lore-mcp` package
 - `wrangler.jsonc` carries the Worker bindings/resources expected by the main app
 - `public/` and `migrations/` are currently copied into the shell because those deploy assets still belong to the deploy package shape
 

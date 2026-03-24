@@ -1,5 +1,5 @@
 /** @implements FR-003 — Host-scoped ingestion runtime inputs and adapters. */
-import { parsePositiveInteger } from "../../../lore-mcp/src/wiring/runtime-value-helpers.orch.3.js";
+import { parsePositiveInteger } from "lore-mcp/wiring/runtime-value-helpers.orch.3.js";
 
 function createRunIngestionHostDeps(env, deps) {
 	const db = env.DB;

@@ -6,18 +6,18 @@ import {
 	verifyAuthenticationResponse,
 } from "@simplewebauthn/server";
 import QrCode from "qrcode-svg";
-import { installWorkflowToRepo } from "../../../lore-mcp/src/domain/github-workflow.ops.efct.js";
+import { installWorkflowToRepo } from "lore-mcp/domain/github-workflow.ops.efct.js";
 import {
 	parseTargetRepo,
 	renderWorkflowYaml,
 	normalizeRepoFullName,
-} from "../../../lore-mcp/src/domain/github-workflow.pure.js";
-import { readAutoUpdatesSetupToken } from "../../../lore-mcp/src/domain/auto-updates-token.efct.js";
+} from "lore-mcp/domain/github-workflow.pure.js";
+import { readAutoUpdatesSetupToken } from "lore-mcp/domain/auto-updates-token.efct.js";
 import {
 	signPayloadBase64Url,
 	encodeTokenPayload,
 	decodeTokenPayload,
-} from "../../../lore-mcp/src/domain/auto-updates-token-codec.efct.js";
+} from "lore-mcp/domain/auto-updates-token-codec.efct.js";
 import {
 	FAIL_WINDOW_TTL_SECONDS,
 	LOCKOUT_TTL_SECONDS,
@@ -27,21 +27,21 @@ import {
 	nextFailCount,
 	isLockoutReached,
 	byteValuesToHexString,
-} from "../../../lore-mcp/src/lib/auth-helpers.pure.js";
-import { safeStringEqual } from "../../../lore-mcp/src/lib/constant-time-equal.pure.js";
-import { registerAuthRoutes } from "../../../lore-mcp/src/auth.orch.1.js";
-import { registerAdminRoutes } from "../../../lore-mcp/src/admin.orch.1.js";
-import { renderAuthPage } from "../../../lore-mcp/src/templates/auth-page.pure.js";
-import { renderEnrollPasskeyPage } from "../../../lore-mcp/src/templates/enroll-passkey.pure.js";
-import { renderEnrollTotpPage } from "../../../lore-mcp/src/templates/enroll-totp.pure.js";
-import { renderInstallWorkflowPage } from "../../../lore-mcp/src/templates/install-workflow.pure.js";
+} from "lore-mcp/lib/auth-helpers.pure.js";
+import { safeStringEqual } from "lore-mcp/lib/constant-time-equal.pure.js";
+import { registerAuthRoutes } from "lore-mcp/auth.orch.1.js";
+import { registerAdminRoutes } from "lore-mcp/admin.orch.1.js";
+import { renderAuthPage } from "lore-mcp/templates/auth-page.pure.js";
+import { renderEnrollPasskeyPage } from "lore-mcp/templates/enroll-passkey.pure.js";
+import { renderEnrollTotpPage } from "lore-mcp/templates/enroll-totp.pure.js";
+import { renderInstallWorkflowPage } from "lore-mcp/templates/install-workflow.pure.js";
 import {
 	PASSKEY_CRED_KEY,
 	CHALLENGE_TTL_SECONDS,
 	challengeKey,
 	buildStoredCredentialData,
 	parseStoredCredentialData,
-} from "../../../lore-mcp/src/webauthn.pure.js";
+} from "lore-mcp/webauthn.pure.js";
 import {
 	kvGet as webauthnKvGet,
 	kvPut as webauthnKvPut,
@@ -56,7 +56,7 @@ import {
 	computeTimeCounter,
 	extractHotpCode,
 	buildOtpAuthUri,
-} from "../../../lore-mcp/src/totp.pure.js";
+} from "lore-mcp/totp.pure.js";
 import { makeInstallWorkflowToRepoRuntime } from "./github-workflow-adapter.efct.js";
 
 function createPlatform(runtimeGlobal) {

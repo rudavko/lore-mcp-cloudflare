@@ -1,8 +1,8 @@
 /** @implements FR-001, FR-020 — Verify runtime server configuration registers the v0 MCP surface and wires prompts/resources. */
 import { describe, expect, test } from "bun:test";
 import { ResourceTemplate } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { createGlobalTestStd } from "../../../lore-mcp/src/test-helpers/runtime.shared.test.js";
-import { createConfigureLoreServerDeps as createBaseConfigureLoreServerDeps } from "../../../lore-mcp/src/index-runtime-configure-deps.orch.3.js";
+import { createGlobalTestStd } from "lore-mcp/test-helpers/runtime.shared.test.js";
+import { createConfigureLoreServerDeps as createBaseConfigureLoreServerDeps } from "lore-mcp/index-runtime-configure-deps.orch.3.js";
 import { makeConfigureLoreServer } from "./runtime.orch.1.js";
 
 const std = createGlobalTestStd(globalThis);

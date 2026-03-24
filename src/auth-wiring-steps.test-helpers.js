@@ -8,11 +8,11 @@ import {
 	workerFetch,
 	workerFetchWithCookies,
 } from "./auth-wiring-env.test-helpers.js";
-import { csrfCookieNameForNonce } from "../../lore-mcp/src/auth-shared.pure.js";
+import { csrfCookieNameForNonce } from "lore-mcp/auth-shared.pure.js";
 import {
 	extractHiddenInputValue,
 	extractSecretDisplay,
-} from "../../lore-mcp/src/test-helpers/html-scrape.test.js";
+} from "lore-mcp/test-helpers/html-scrape.test.js";
 
 function buildApproveBody({
 	requestNonce,

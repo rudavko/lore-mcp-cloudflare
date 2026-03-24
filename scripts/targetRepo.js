@@ -1,4 +1,4 @@
-import { normalizeRepoFullName } from "../../lore-mcp/src/domain/github-workflow.pure.js";
+import { normalizeRepoFullName } from "lore-mcp/domain/github-workflow.pure.js";
 
 function missingTargetRepoError() {
 	return new Error(

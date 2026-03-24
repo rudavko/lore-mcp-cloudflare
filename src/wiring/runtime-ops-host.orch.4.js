@@ -1,5 +1,5 @@
 /** @implements FR-001 — Host-scoped runtime operation inputs and adapters. */
-import { parsePositiveInteger } from "../../../lore-mcp/src/wiring/runtime-value-helpers.orch.3.js";
+import { parsePositiveInteger } from "lore-mcp/wiring/runtime-value-helpers.orch.3.js";
 
 function createRuntimeOpsHostDeps(env, deps) {
 	return {

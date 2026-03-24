@@ -1,8 +1,8 @@
 /** @implements FR-011 — Shared auth E2E flows over the exported worker. */
 import { expect } from "bun:test";
-import { TOTP_SECRET_KEY, csrfCookieNameForNonce } from "../../lore-mcp/src/auth-shared.pure.js";
-import { PASSKEY_CRED_KEY } from "../../lore-mcp/src/webauthn.pure.js";
-import { lockKey } from "../../lore-mcp/src/lib/auth-helpers.pure.js";
+import { TOTP_SECRET_KEY, csrfCookieNameForNonce } from "lore-mcp/auth-shared.pure.js";
+import { PASSKEY_CRED_KEY } from "lore-mcp/webauthn.pure.js";
+import { lockKey } from "lore-mcp/lib/auth-helpers.pure.js";
 import {
 	ACCESS_PASSPHRASE,
 	extractHiddenInputValue,

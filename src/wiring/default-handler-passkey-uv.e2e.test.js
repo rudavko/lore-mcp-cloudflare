@@ -1,10 +1,10 @@
 /** @implements FR-001 — Regression: passkey verification should not require UV when passphrase is first factor. */
 import { expect, test } from "bun:test";
-import { csrfCookieNameForNonce } from "../../../lore-mcp/src/auth-shared.pure.js";
-import { registerAuthRoutes } from "../../../lore-mcp/src/auth.orch.1.js";
-import { renderAuthPage } from "../../../lore-mcp/src/templates/auth-page.pure.js";
-import { renderEnrollPasskeyPage } from "../../../lore-mcp/src/templates/enroll-passkey.pure.js";
-import { renderEnrollTotpPage } from "../../../lore-mcp/src/templates/enroll-totp.pure.js";
+import { csrfCookieNameForNonce } from "lore-mcp/auth-shared.pure.js";
+import { registerAuthRoutes } from "lore-mcp/auth.orch.1.js";
+import { renderAuthPage } from "lore-mcp/templates/auth-page.pure.js";
+import { renderEnrollPasskeyPage } from "lore-mcp/templates/enroll-passkey.pure.js";
+import { renderEnrollTotpPage } from "lore-mcp/templates/enroll-totp.pure.js";
 import { makeDefaultHandlerFetch } from "./default-handler.orch.1.js";
 import {
 	createDefaultHandlerDeps,

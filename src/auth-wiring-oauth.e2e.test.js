@@ -1,6 +1,6 @@
 /** @implements FR-011 — Exported-worker OAuth auth-flow E2E checks. */
 import { describe, expect, test } from "bun:test";
-import { csrfCookieNameForNonce } from "../../lore-mcp/src/auth-shared.pure.js";
+import { csrfCookieNameForNonce } from "lore-mcp/auth-shared.pure.js";
 import {
 	ACCESS_PASSPHRASE,
 	PASSKEY_CRED_KEY,

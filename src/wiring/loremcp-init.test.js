@@ -1,7 +1,7 @@
 /** @implements FR-001, ADR-0001 — Verify initialization wiring creates runtime surfaces from a single dependency index. */
 import { describe, expect, test } from "bun:test";
 import { makeInitLoreMcp, makeProcessLoreIngestion } from "./loremcp.efct.js";
-import { createBaseStd } from "../../../lore-mcp/src/test-helpers/runtime.shared.test.js";
+import { createBaseStd } from "lore-mcp/test-helpers/runtime.shared.test.js";
 describe("wiring/loremcp.efct makeInitLoreMcp", () => {
 	test("keeps startup alive when processIngestion throws", async () => {
 		let configured = false;

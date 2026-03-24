@@ -1,9 +1,9 @@
 /** @implements NFR-006, FR-011 — Verify auth route lookup and session-isolated handler wiring behavior. */
 import { expect, test } from "bun:test";
-import { registerAuthRoutes } from "../../../lore-mcp/src/auth.orch.1.js";
-import { renderAuthPage } from "../../../lore-mcp/src/templates/auth-page.pure.js";
-import { renderEnrollPasskeyPage } from "../../../lore-mcp/src/templates/enroll-passkey.pure.js";
-import { renderEnrollTotpPage } from "../../../lore-mcp/src/templates/enroll-totp.pure.js";
+import { registerAuthRoutes } from "lore-mcp/auth.orch.1.js";
+import { renderAuthPage } from "lore-mcp/templates/auth-page.pure.js";
+import { renderEnrollPasskeyPage } from "lore-mcp/templates/enroll-passkey.pure.js";
+import { renderEnrollTotpPage } from "lore-mcp/templates/enroll-totp.pure.js";
 import { makeDefaultHandlerFetch } from "./default-handler.orch.1.js";
 import {
 	createDefaultHandlerDeps,

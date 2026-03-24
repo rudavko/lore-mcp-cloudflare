@@ -1,14 +1,14 @@
 /** @implements FR-001 — Runtime operation builders used during MCP server configuration. */
-import { buildEntryAndTripleOps } from "../../../lore-mcp/src/wiring/runtime-entry-triple.orch.3.js";
-import { buildEntityAndHistoryOps } from "../../../lore-mcp/src/wiring/runtime-entity-history.orch.3.js";
-import { makeGraphAndSearchOps } from "../../../lore-mcp/src/wiring/runtime-search.orch.3.js";
+import { buildEntryAndTripleOps } from "lore-mcp/wiring/runtime-entry-triple.orch.3.js";
+import { buildEntityAndHistoryOps } from "lore-mcp/wiring/runtime-entity-history.orch.3.js";
+import { makeGraphAndSearchOps } from "lore-mcp/wiring/runtime-search.orch.3.js";
 import {
 	makeResolveCanonicalEntityId,
 	makeResolveCanonicalEntityIdForCreate,
-} from "../../../lore-mcp/src/wiring/runtime-resolve-entity.orch.4.js";
-import { createConflictOps } from "../../../lore-mcp/src/wiring/runtime-configure-conflicts.orch.4.js";
-import { createEntryWithEmbeddingRuntime } from "../../../lore-mcp/src/wiring/runtime-configure-embedding.orch.4.js";
-import { createIngestionRuntime } from "../../../lore-mcp/src/wiring/runtime-configure-ingestion.orch.4.js";
+} from "lore-mcp/wiring/runtime-resolve-entity.orch.4.js";
+import { createConflictOps } from "lore-mcp/wiring/runtime-configure-conflicts.orch.4.js";
+import { createEntryWithEmbeddingRuntime } from "lore-mcp/wiring/runtime-configure-embedding.orch.4.js";
+import { createIngestionRuntime } from "lore-mcp/wiring/runtime-configure-ingestion.orch.4.js";
 import { createRuntimeOpsHostDeps } from "./runtime-ops-host.orch.4.js";
 import {
 	createSemanticSearchPort,

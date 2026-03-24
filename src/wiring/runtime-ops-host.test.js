@@ -1,7 +1,7 @@
 /** @implements FR-001 — Verify runtime-ops host adapter translates env into stable ports. */
 import { describe, expect, test } from "bun:test";
 import { createRuntimeOpsHostDeps } from "./runtime-ops-host.orch.4.js";
-import { createGlobalTestStd } from "../../../lore-mcp/src/test-helpers/runtime.shared.test.js";
+import { createGlobalTestStd } from "lore-mcp/test-helpers/runtime.shared.test.js";
 
 const std = createGlobalTestStd(globalThis);
 

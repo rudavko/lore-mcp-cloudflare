@@ -1,7 +1,7 @@
 /** @implements FR-003 — Verify ingestion host adapter builds stable runtime ports from env. */
 import { describe, expect, test } from "bun:test";
 import { createRunIngestionHostDeps } from "./runtime-ingestion-host.orch.4.js";
-import { createGlobalTestStd } from "../../../lore-mcp/src/test-helpers/runtime.shared.test.js";
+import { createGlobalTestStd } from "lore-mcp/test-helpers/runtime.shared.test.js";
 
 const std = createGlobalTestStd(globalThis);
 

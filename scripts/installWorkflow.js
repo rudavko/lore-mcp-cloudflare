@@ -15,11 +15,11 @@
 
 import { Buffer } from "node:buffer";
 
-import { installWorkflowToRepo } from "../../lore-mcp/src/domain/github-workflow.ops.efct.js";
+import { installWorkflowToRepo } from "lore-mcp/domain/github-workflow.ops.efct.js";
 import {
 	parseTargetRepo,
 	renderWorkflowYaml,
-} from "../../lore-mcp/src/domain/github-workflow.pure.js";
+} from "lore-mcp/domain/github-workflow.pure.js";
 import { resolveTargetRepo } from "./targetRepo.js";
 
 function readGitHubToken() {

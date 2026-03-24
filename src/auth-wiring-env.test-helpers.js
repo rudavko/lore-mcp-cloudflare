@@ -1,16 +1,16 @@
 /** @implements FR-011 — Shared exported-worker auth E2E environment helpers. */
 import worker from "./index.js";
-import { PASSKEY_CRED_KEY } from "../../lore-mcp/src/webauthn.pure.js";
-import { base32Decode, computeTimeCounter, counterToBytes, extractHotpCode } from "../../lore-mcp/src/totp.pure.js";
+import { PASSKEY_CRED_KEY } from "lore-mcp/webauthn.pure.js";
+import { base32Decode, computeTimeCounter, counterToBytes, extractHotpCode } from "lore-mcp/totp.pure.js";
 import {
 	applySetCookies,
 	buildCookieHeader,
-} from "../../lore-mcp/src/test-helpers/http-cookies.test.js";
+} from "lore-mcp/test-helpers/http-cookies.test.js";
 import {
 	extractHiddenInputValue,
 	extractHref,
 	extractSecretDisplay,
-} from "../../lore-mcp/src/test-helpers/html-scrape.test.js";
+} from "lore-mcp/test-helpers/html-scrape.test.js";
 export {
 	createCtx,
 	createMemoryKv,
@@ -19,7 +19,7 @@ export {
 	extractHiddenInputValue,
 	extractHref,
 	extractSecretDisplay,
-} from "../../lore-mcp/src/test-helpers/html-scrape.test.js";
+} from "lore-mcp/test-helpers/html-scrape.test.js";
 
 const RequestCtor = globalThis.Request;
 const ResponseCtor = globalThis.Response;

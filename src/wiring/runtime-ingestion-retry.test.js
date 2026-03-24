@@ -1,7 +1,7 @@
 /** @implements FR-010, NFR-002 — Verify ingestion embedding-retry behavior for long-term reliability. */
 import { describe, expect, test } from "bun:test";
 import { makeRunLoreIngestion } from "./runtime.orch.1.js";
-import { createGlobalTestStd } from "../../../lore-mcp/src/test-helpers/runtime.shared.test.js";
+import { createGlobalTestStd } from "lore-mcp/test-helpers/runtime.shared.test.js";
 const std = createGlobalTestStd(globalThis);
 const deriveValidToStateFromInput = (value) => {
 	if (value === undefined) {

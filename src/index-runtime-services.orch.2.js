@@ -1,14 +1,14 @@
 /** @implements FR-001, FR-003 — Runtime service assembly over stable named dependency builders. */
-import { APP_VERSION as APP_VERSION_FALLBACK } from "../../lore-mcp/src/config.pure.js";
+import { APP_VERSION as APP_VERSION_FALLBACK } from "lore-mcp/config.pure.js";
 import { makeInitLoreMcp, makeProcessLoreIngestion } from "./wiring/loremcp.efct.js";
 import { makeConfigureLoreServer, makeRunLoreIngestion } from "./wiring/runtime.orch.1.js";
-import { createRuntimeStd, resolveRuntimeAppVersion } from "../../lore-mcp/src/index-runtime-std.orch.3.js";
-import { createConfigureLoreServerDeps } from "../../lore-mcp/src/index-runtime-configure-deps.orch.3.js";
+import { createRuntimeStd, resolveRuntimeAppVersion } from "lore-mcp/index-runtime-std.orch.3.js";
+import { createConfigureLoreServerDeps } from "lore-mcp/index-runtime-configure-deps.orch.3.js";
 import {
 	createInitLoreMcpDeps,
 	createProcessLoreIngestionDeps,
-} from "../../lore-mcp/src/index-runtime-init-deps.orch.3.js";
-import { createRunLoreIngestionDeps } from "../../lore-mcp/src/index-runtime-ingestion-deps.orch.3.js";
+} from "lore-mcp/index-runtime-init-deps.orch.3.js";
+import { createRunLoreIngestionDeps } from "lore-mcp/index-runtime-ingestion-deps.orch.3.js";
 import packageJson from "../package.json";
 
 function createRuntimeServices(runtimeGlobal) {
