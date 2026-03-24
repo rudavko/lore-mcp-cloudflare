@@ -9,4 +9,7 @@ ALTER TABLE canonical_entities ADD COLUMN produced_by TEXT;
 ALTER TABLE canonical_entities ADD COLUMN about TEXT;
 ALTER TABLE canonical_entities ADD COLUMN affects TEXT;
 ALTER TABLE canonical_entities ADD COLUMN specificity TEXT;
-ALTER TABLE canonical_entities ADD COLUMN updated_at TEXT NOT NULL DEFAULT (datetime('now'));
+ALTER TABLE canonical_entities ADD COLUMN updated_at TEXT;
+UPDATE canonical_entities
+SET updated_at = COALESCE(updated_at, created_at, datetime('now'))
+WHERE updated_at IS NULL;

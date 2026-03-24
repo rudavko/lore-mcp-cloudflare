@@ -6,7 +6,7 @@
   "main": "./src/index.js",
   "scripts": {
     "dev": "wrangler dev",
-    "deploy": "wrangler deploy",
+    "deploy": "node scripts/deployWorker.js",
     "start": "wrangler dev",
     "cf-typegen": "wrangler types",
     "build-hash": "node scripts/buildHash.js",
@@ -14,15 +14,15 @@
     "test": "bun test"
   },
   "dependencies": {
-    "@cloudflare/workers-oauth-provider": "^0.2.3",
-    "@simplewebauthn/server": "^13.2.2",
-    "agents": "^0.4.0",
-    "lore-mcp": "github:rudavko/lore-mcp#929ab036a2bcf1474759b734b9d659c88af433ee",
-    "qrcode-svg": "^1.1.0",
-    "zod": "^4.3.6"
+    "@cloudflare/workers-oauth-provider": "0.2.3",
+    "@simplewebauthn/server": "13.2.2",
+    "agents": "0.4.0",
+    "lore-mcp": "github:rudavko/lore-mcp#4595309078e63f48348f7180bf49c516a31d997b",
+    "qrcode-svg": "1.1.0",
+    "zod": "4.3.6"
   },
   "devDependencies": {
-    "@types/bun": "^1.3.9",
-    "wrangler": "^4.64.0"
+    "@types/bun": "1.3.9",
+    "wrangler": "4.64.0"
   }
 }
