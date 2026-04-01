@@ -57,7 +57,7 @@ export function makeInstallWorkflowToRepoRuntime(deps) {
 				body: init?.body,
 			});
 		} catch (error) {
-			throw "githubFetchApi: " + errorMessage(error);
+			throw new Error("githubFetchApi: " + errorMessage(error));
 		}
 		let body = null;
 		try {
@@ -66,17 +66,17 @@ export function makeInstallWorkflowToRepoRuntime(deps) {
 			body = readJson ? await readJson() : null;
 		} catch (error) {
 			if (errorMessage(error).includes("Illegal invocation")) {
-				throw "githubResponse.json: " + errorMessage(error);
+				throw new Error("githubResponse.json: " + errorMessage(error));
 			}
 			body = null;
 		}
 		try {
 			return { status: response.status, ok: response.ok, body };
 		} catch (error) {
-			throw "githubResponseFields: " + errorMessage(error);
+			throw new Error("githubResponseFields: " + errorMessage(error));
 		}
 	}
-	async function readJsonSafe(resp) {
+	async function getBody(resp) {
 		return resp.body;
 	}
 	async function callInstallWorkflowToRepo(token, targetRepo) {
@@ -86,11 +86,11 @@ export function makeInstallWorkflowToRepoRuntime(deps) {
 				renderWorkflowYaml: deps.renderWorkflowYaml,
 				btoa: encodeBase64Ascii,
 				githubFetch,
-				readJsonSafe,
+				getBody,
 				jsonStringify: deps.jsonStringify,
 			});
 		} catch (error) {
-			throw "installWorkflowToRepoRuntime: " + errorMessage(error);
+			throw new Error("installWorkflowToRepoRuntime: " + errorMessage(error));
 		}
 	}
 	return async (token, targetRepo) => {

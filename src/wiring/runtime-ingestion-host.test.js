@@ -1,7 +1,7 @@
 /** @implements FR-003 — Verify ingestion host adapter builds stable runtime ports from env. */
 import { describe, expect, test } from "bun:test";
 import { createRunIngestionHostDeps } from "./runtime-ingestion-host.orch.4.js";
-import { createGlobalTestStd } from "lore-mcp/test-helpers/runtime.shared.test.js";
+import { createGlobalTestStd } from "../test-helpers/runtime.shared.helper.js";
 
 const std = createGlobalTestStd(globalThis);
 
@@ -16,6 +16,7 @@ describe("wiring/runtime-ingestion-host", () => {
 			VECTORIZE_INDEX: {
 				upsert: async (vectors) => vectors.length,
 			},
+			EMBEDDING_MODEL_ID: "@cf/override-model",
 			EMBEDDING_MAX_RETRIES: "7",
 			EMBEDDING_RETRY_BATCH_SIZE: "11",
 			EMBEDDING_RETRY_STALE_MS: "13",
@@ -30,6 +31,7 @@ describe("wiring/runtime-ingestion-host", () => {
 		});
 
 		expect(host.db).toBe(env.DB);
+		expect(host.embeddingModelId).toBe("@cf/override-model");
 		expect(host.embeddingMaxRetries).toBe(7);
 		expect(host.embeddingRetryBatchSize).toBe(11);
 		expect(host.embeddingRetryStaleMs).toBe(13);
@@ -40,6 +42,7 @@ describe("wiring/runtime-ingestion-host", () => {
 		expect(calls[0].id).toBe("entry-1");
 		expect(calls[0].text).toBe("hello");
 		expect(typeof calls[0].adapters.aiRun).toBe("function");
+		expect(calls[0].adapters.embeddingModelId).toBe("@cf/override-model");
 		expect(typeof calls[0].adapters.vectorizeUpsert).toBe("function");
 	});
 });

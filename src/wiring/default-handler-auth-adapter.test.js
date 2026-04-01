@@ -124,4 +124,58 @@ describe("wiring/default-handler-auth-adapter", () => {
 			"Stored auth challenge must decode to an object.",
 		);
 	});
+
+	test("createAuthenticationOptions returns null when stored credential data is unparseable", async () => {
+		const harness = createAuthAdapterHarness({
+			webauthn: {
+				parseStoredCredentialData: () => null,
+			},
+		});
+		await expect(
+			harness.deps.createAuthenticationOptions("lore.example.com", { id: "cred-1" }),
+		).resolves.toBeNull();
+	});
+
+	test("verifyAuthentication returns null newCounter when credential data is unparseable", async () => {
+		const harness = createAuthAdapterHarness({
+			webauthn: {
+				parseStoredCredentialData: () => null,
+			},
+		});
+		await expect(
+			harness.deps.verifyAuthentication({
+				credential: { id: "cred-1" },
+				response: {},
+				challenge: "challenge-1",
+				origin: "https://lore.example.com",
+				hostname: "lore.example.com",
+			}),
+		).resolves.toEqual({ verified: false, newCounter: null });
+	});
+
+	test("verifyAuthentication returns null newCounter when verification fails", async () => {
+		const harness = createAuthAdapterHarness({
+			webauthn: {
+				parseStoredCredentialData: () => ({
+					id: "cred-1",
+					publicKeyBytes: [1, 2, 3],
+					counter: 42,
+					transports: ["internal"],
+				}),
+				verifyAuthenticationResponse: async () => ({
+					verified: false,
+					authenticationInfo: { newCounter: 99 },
+				}),
+			},
+		});
+		await expect(
+			harness.deps.verifyAuthentication({
+				credential: { id: "cred-1" },
+				response: {},
+				challenge: "challenge-1",
+				origin: "https://lore.example.com",
+				hostname: "lore.example.com",
+			}),
+		).resolves.toEqual({ verified: false, newCounter: null });
+	});
 });

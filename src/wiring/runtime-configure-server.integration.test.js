@@ -1,7 +1,7 @@
 /** @implements FR-001, FR-020 — Verify runtime server configuration registers the v0 MCP surface and wires prompts/resources. */
 import { describe, expect, test } from "bun:test";
 import { ResourceTemplate } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { createGlobalTestStd } from "lore-mcp/test-helpers/runtime.shared.test.js";
+import { createGlobalTestStd } from "../test-helpers/runtime.shared.helper.js";
 import { createConfigureLoreServerDeps as createBaseConfigureLoreServerDeps } from "lore-mcp/index-runtime-configure-deps.orch.3.js";
 import { makeConfigureLoreServer } from "./runtime.orch.1.js";
 
@@ -132,6 +132,28 @@ describe("wiring/runtime configureLoreServer integration", () => {
 		const text = extractText(result);
 		expect(text).toContain("Target repo: owner/example-repo");
 		expect(text).toContain("https://lore.example.com/admin/install-workflow?setup_token=");
+	});
+
+	test("configured engine_check auto_updates_status returns structured resource data", async () => {
+		const configureLoreServer = makeConfigureLoreServer(createConfigureLoreServerDeps());
+		const { server, tools } = createRecordingServer();
+
+		await configureLoreServer(server, {
+			DB: {},
+			ACCESS_PASSPHRASE: "test-pass",
+			TARGET_REPO: "owner/example-repo",
+			BUILD_HASH: "build-hash-xyz",
+		});
+
+		const result = await tools.get("engine_check").handler({ action: "auto_updates_status" });
+		const content = Array.isArray(result.content) ? result.content : [];
+		const resourceItem = content.find((item) => item && item.type === "resource");
+		expect(resourceItem).toBeDefined();
+		const payload = JSON.parse(resourceItem.resource.text);
+		expect(payload.action).toBe("auto_updates_status");
+		expect(payload.configured).toBe(true);
+		expect(payload.target_repo).toBe("owner/example-repo");
+		expect(payload.installation_state).toBe("unknown");
 	});
 
 	test("configured object_create entity path uses the injected upsert entity runtime", async () => {

@@ -18,7 +18,6 @@ describe("wiring/github-workflow-adapter.efct", () => {
 				return { error: null, owner: "owner", repo: "repo" };
 			},
 			renderWorkflowYaml: (targetRepo) => `yaml:${targetRepo}`,
-			btoa: (value) => `b64:${value}`,
 			jsonStringify: JSON.stringify,
 			githubFetchApi: async (url, init) => {
 				fetchCalls.push({ url, init });
@@ -75,7 +74,7 @@ describe("wiring/github-workflow-adapter.efct", () => {
 			ok: true,
 			body: null,
 		});
-		expect(await injected.readJsonSafe({ body: { ok: "body" } })).toEqual({ ok: "body" });
+		expect(await injected.getBody({ body: { ok: "body" } })).toEqual({ ok: "body" });
 		expect(injected.renderWorkflowYaml("owner/repo")).toBe("yaml:owner/repo");
 		expect(injected.btoa("yaml")).toBe("eWFtbA==");
 		expect(injected.jsonStringify({ ok: true })).toBe('{"ok":true}');
@@ -89,7 +88,6 @@ describe("wiring/github-workflow-adapter.efct", () => {
 			},
 			parseTargetRepo: () => ({ error: null, owner: "owner", repo: "repo" }),
 			renderWorkflowYaml: (targetRepo) => `yaml:${targetRepo}`,
-			btoa: (value) => `b64:${value}`,
 			jsonStringify: JSON.stringify,
 			githubFetchApi: async (_url, _init) => {
 				responseRef = new globalThis.Response('{"ok":true}', {
@@ -114,7 +112,6 @@ describe("wiring/github-workflow-adapter.efct", () => {
 			},
 			parseTargetRepo: () => ({ error: null, owner: "owner", repo: "repo" }),
 			renderWorkflowYaml: (targetRepo) => `yaml:${targetRepo}`,
-			btoa: () => "__unused__",
 			jsonStringify: JSON.stringify,
 			githubFetchApi: async () => ({
 				status: 200,

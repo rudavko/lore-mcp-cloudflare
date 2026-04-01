@@ -1,6 +1,4 @@
 /** @implements FR-011, NFR-001 — Effects boundary for WebAuthn challenge and credential KV persistence. */
-/** Sentinel for TDD hook. */
-export const _MODULE = "webauthn.efct";
 /** Read a raw string from KV. */
 export async function kvGet(kv, key) {
 	return kv.get(key);

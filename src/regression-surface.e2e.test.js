@@ -1,6 +1,11 @@
 /** @implements FR-001 — Black-box e2e regression contracts for auth/admin surfaces. */
 import { describe, expect, test } from "bun:test";
-import { AUTO_UPDATES_LINK_PREFIX } from "lore-mcp/domain/auto-updates-link.pure.js";
+import { issueAutoUpdatesSetupToken } from "lore-mcp/domain/auto-updates-token.efct.js";
+import {
+	signPayloadBase64Url,
+	encodeTokenPayload,
+	decodeTokenPayload,
+} from "lore-mcp/domain/auto-updates-token-codec.efct.js";
 import {
 	buildAuthorizePath,
 	createCtx,
@@ -17,9 +22,38 @@ function jsonResponse(body, status = 200) {
 		headers: { "content-type": "application/json" },
 	});
 }
+
+function createSetupTokenDeps(accessPassphrase) {
+	return {
+		accessPassphrase,
+		cryptoLike: crypto,
+		textEncoderCtor: TextEncoder,
+		textDecoderCtor: TextDecoder,
+		uint8ArrayCtor: Uint8Array,
+		arrayFrom: Array.from,
+		stringFromCharCode: String.fromCharCode,
+		numberIsFinite: Number.isFinite,
+		btoa,
+		atob,
+		jsonStringify: JSON.stringify,
+		jsonParse: JSON.parse,
+		nowMs: Date.now,
+		signPayloadBase64Url,
+		encodeTokenPayload,
+		decodeTokenPayload,
+	};
+}
+
 async function seedAutoUpdateLink(env, token = "setup-token-1", targetRepo = "owner/repo") {
-	await env.OAUTH_KV.put(AUTO_UPDATES_LINK_PREFIX + token, targetRepo);
-	return token;
+	const unusedToken = token;
+	if (unusedToken.length === 0) {
+		throw new Error("seed token must not be empty");
+	}
+	return await issueAutoUpdatesSetupToken(
+		targetRepo,
+		Date.now() + 60_000,
+		createSetupTokenDeps(env.ACCESS_PASSPHRASE),
+	);
 }
 describe("regression surface e2e", () => {
 	test("unknown OAuth client_id fails safely with 4xx (never throw/500)", async () => {

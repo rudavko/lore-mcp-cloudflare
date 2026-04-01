@@ -5,7 +5,7 @@ import {
 	createSyncEmbeddingPort,
 	hasSemanticSearchCapability,
 } from "./runtime-search-host.orch.4.js";
-import { createGlobalTestStd } from "lore-mcp/test-helpers/runtime.shared.test.js";
+import { createGlobalTestStd } from "../test-helpers/runtime.shared.helper.js";
 
 const std = createGlobalTestStd(globalThis);
 
@@ -22,8 +22,13 @@ describe("wiring/runtime-search-host", () => {
 	});
 
 	test("semantic search returns filtered matches through host adapters", async () => {
+		const aiCalls = [];
 		const semanticSearch = createSemanticSearchPort({
-			aiRun: async () => ({ data: [[0.1, 0.2, 0.3]] }),
+			aiRun: async (model, input) => {
+				aiCalls.push({ model, input });
+				return { data: [[0.1, 0.2, 0.3]] };
+			},
+			embeddingModelId: "@cf/custom-model",
 			vectorQuery: async () => ({
 				matches: [
 					{ id: "keep", score: 0.7 },
@@ -35,6 +40,7 @@ describe("wiring/runtime-search-host", () => {
 		});
 
 		await expect(semanticSearch("query", 5)).resolves.toEqual([{ id: "keep", score: 0.7 }]);
+		expect(aiCalls).toEqual([{ model: "@cf/custom-model", input: { text: ["query"] } }]);
 	});
 
 	test("sync embedding forwards host adapters into orchestration", async () => {
@@ -43,6 +49,7 @@ describe("wiring/runtime-search-host", () => {
 		const vectorizeUpsert = async () => undefined;
 		const syncEmbedding = createSyncEmbeddingPort({
 			aiRun,
+			embeddingModelId: "@cf/custom-model",
 			vectorizeUpsert,
 			syncEmbeddingOrch: async (id, text, deps) => {
 				calls.push({ id, text, deps });
@@ -53,6 +60,7 @@ describe("wiring/runtime-search-host", () => {
 
 		expect(calls).toHaveLength(1);
 		expect(calls[0].deps.aiRun).toBe(aiRun);
+		expect(calls[0].deps.embeddingModelId).toBe("@cf/custom-model");
 		expect(calls[0].deps.vectorizeUpsert).toBe(vectorizeUpsert);
 	});
 });

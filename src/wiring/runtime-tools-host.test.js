@@ -1,7 +1,7 @@
 /** @implements FR-001 — Verify tool host adapter resolves build metadata and env-backed ports. */
 import { describe, expect, test } from "bun:test";
 import { createToolsHostDeps, resolveBuildHash } from "./runtime-tools-host.orch.4.js";
-import { createGlobalTestStd } from "lore-mcp/test-helpers/runtime.shared.test.js";
+import { createGlobalTestStd } from "../test-helpers/runtime.shared.helper.js";
 
 const std = createGlobalTestStd(globalThis);
 

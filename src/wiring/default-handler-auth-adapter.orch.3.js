@@ -182,7 +182,7 @@ function createDefaultHandlerAuthRouteDeps(ctx) {
 	const createAuthenticationOptions = async (hostname, credential) => {
 		const parsed = webauthn.parseStoredCredentialData(credential);
 		if (!parsed) {
-			return {};
+			return null;
 		}
 		return await webauthn.generateAuthenticationOptions({
 			rpID: hostname,
@@ -194,7 +194,7 @@ function createDefaultHandlerAuthRouteDeps(ctx) {
 	const verifyAuthentication = async (input) => {
 		const parsed = webauthn.parseStoredCredentialData(input.credential);
 		if (!parsed) {
-			return { verified: false, newCounter: 0 };
+			return { verified: false, newCounter: null };
 		}
 		const verification = await webauthn.verifyAuthenticationResponse({
 			response: input.response,
@@ -216,7 +216,7 @@ function createDefaultHandlerAuthRouteDeps(ctx) {
 				? verification.authenticationInfo
 				: null;
 		if (!authenticationInfo || typeof authenticationInfo.newCounter !== "number") {
-			return { verified: false, newCounter: parsed.counter };
+			return { verified: false, newCounter: null };
 		}
 		return { verified: true, newCounter: authenticationInfo.newCounter };
 	};

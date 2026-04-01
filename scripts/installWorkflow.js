@@ -63,7 +63,7 @@ async function main() {
 		renderWorkflowYaml,
 		btoa: base64Encode,
 		githubFetch,
-		readJsonSafe: async (response) => response.body,
+		getBody: async (response) => response.body,
 		jsonStringify: JSON.stringify,
 	});
 	if (!result.ok) {

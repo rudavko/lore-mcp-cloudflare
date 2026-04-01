@@ -70,8 +70,8 @@ function createPlatform(runtimeGlobal) {
 		textEncoderCtor: runtimeGlobal.TextEncoder,
 		textDecoderCtor: runtimeGlobal.TextDecoder,
 		uint8ArrayCtor: runtimeGlobal.Uint8Array,
-		jsonParse: JSON.parse,
-		jsonStringify: JSON.stringify,
+		jsonParse: runtimeGlobal.JSON.parse,
+		jsonStringify: runtimeGlobal.JSON.stringify,
 		atob: runtimeGlobal.atob.bind(runtimeGlobal),
 		btoa: runtimeGlobal.btoa.bind(runtimeGlobal),
 		stringFromCharCode: runtimeGlobal.String.fromCharCode,
@@ -146,16 +146,16 @@ function createAdmin(runtimeGlobal) {
 			renderWorkflowYaml,
 			btoa: runtimeGlobal.btoa.bind(runtimeGlobal),
 			githubFetchApi: (input, init) => runtimeGlobal.fetch(input, init),
-			jsonStringify: JSON.stringify,
+			jsonStringify: runtimeGlobal.JSON.stringify,
 		}),
 		normalizeRepoFullName,
-			readAutoUpdatesSetupToken: (token, tokenDeps) =>
-				readAutoUpdatesSetupToken(token, {
-					...tokenDeps,
-					safeStringEqual,
-					signPayloadBase64Url,
-					encodeTokenPayload,
-					decodeTokenPayload,
+		readAutoUpdatesSetupToken: (token, tokenDeps) =>
+			readAutoUpdatesSetupToken(token, {
+				...tokenDeps,
+				safeStringEqual,
+				signPayloadBase64Url,
+				encodeTokenPayload,
+				decodeTokenPayload,
 			}),
 	};
 }

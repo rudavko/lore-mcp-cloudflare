@@ -6,7 +6,7 @@ ALTER TABLE entries ADD COLUMN embedding_last_attempt_at TEXT;
 
 CREATE INDEX IF NOT EXISTS idx_entries_embedding_status ON entries(embedding_status);
 
--- Backfill existing rows as ready (legacy entries have already been written).
+-- Backfill existing rows as ready because these columns were added after initial writes.
 UPDATE entries
 SET embedding_status = 'ready',
 	embedding_retry_count = 0

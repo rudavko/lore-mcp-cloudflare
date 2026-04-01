@@ -12,7 +12,7 @@ import { csrfCookieNameForNonce } from "lore-mcp/auth-shared.pure.js";
 import {
 	extractHiddenInputValue,
 	extractSecretDisplay,
-} from "lore-mcp/test-helpers/html-scrape.test.js";
+} from "./test-helpers/html-scrape.helper.js";
 
 function buildApproveBody({
 	requestNonce,

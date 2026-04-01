@@ -5,14 +5,14 @@ function hasSemanticSearchCapability({ aiRun, vectorQuery }) {
 	return !!(aiRun && vectorQuery);
 }
 
-function createSemanticSearchPort({ aiRun, vectorQuery, semanticMinScore, std }) {
+function createSemanticSearchPort({ aiRun, embeddingModelId, vectorQuery, semanticMinScore, std }) {
 	return async (query, limit) => {
 		if (!hasSemanticSearchCapability({ aiRun, vectorQuery })) {
 			return [];
 		}
 		const minScore = parseSemanticMinScore(semanticMinScore, std);
 		try {
-			const embeddingResult = await aiRun("@cf/baai/bge-base-en-v1.5", { text: [query] });
+			const embeddingResult = await aiRun(embeddingModelId, { text: [query] });
 			const vector =
 				embeddingResult.data && embeddingResult.data.length > 0 ? embeddingResult.data[0] : null;
 			if (vector === null) {
@@ -35,9 +35,9 @@ function createSemanticSearchPort({ aiRun, vectorQuery, semanticMinScore, std })
 	};
 }
 
-function createSyncEmbeddingPort({ aiRun, vectorizeUpsert, syncEmbeddingOrch }) {
+function createSyncEmbeddingPort({ aiRun, embeddingModelId, vectorizeUpsert, syncEmbeddingOrch }) {
 	return async (id, text) => {
-		await syncEmbeddingOrch(id, text, { aiRun, vectorizeUpsert });
+		await syncEmbeddingOrch(id, text, { aiRun, embeddingModelId, vectorizeUpsert });
 	};
 }
 

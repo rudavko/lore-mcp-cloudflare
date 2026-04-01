@@ -1,6 +1,5 @@
-/** @implements FR-001 — MCP API handler compatibility adapter for Accept header normalization. */
-export const _MODULE = "mcp-api-handler.efct";
-export const makeCompatMcpApiHandler = (deps) => {
+/** @implements FR-001 — MCP API handler wrapper for Accept header normalization. */
+export const makeMcpApiHandler = (deps) => {
 	function normalizeAcceptIfNeeded(request, env) {
 		const hasDurableGet = !!(env.MCP_OBJECT && typeof env.MCP_OBJECT.get === "function");
 		if (!hasDurableGet) {

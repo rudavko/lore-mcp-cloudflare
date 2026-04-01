@@ -5,21 +5,21 @@ import { base32Decode, computeTimeCounter, counterToBytes, extractHotpCode } fro
 import {
 	applySetCookies,
 	buildCookieHeader,
-} from "lore-mcp/test-helpers/http-cookies.test.js";
+} from "./test-helpers/http-cookies.helper.js";
 import {
 	extractHiddenInputValue,
 	extractHref,
 	extractSecretDisplay,
-} from "lore-mcp/test-helpers/html-scrape.test.js";
+} from "./test-helpers/html-scrape.helper.js";
 export {
 	createCtx,
 	createMemoryKv,
-} from "./test-helpers/http-kv-context.test.js";
+} from "./test-helpers/http-kv-context.helper.js";
 export {
 	extractHiddenInputValue,
 	extractHref,
 	extractSecretDisplay,
-} from "lore-mcp/test-helpers/html-scrape.test.js";
+} from "./test-helpers/html-scrape.helper.js";
 
 const RequestCtor = globalThis.Request;
 const ResponseCtor = globalThis.Response;

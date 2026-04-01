@@ -2,7 +2,6 @@
 import { createLoreMcpApp } from "./index-app-services.orch.2.js";
 import { createWorkerServices } from "./index-worker-services.orch.2.js";
 
-export const _MODULE = "index.orch";
 
 const runtimeGlobal = globalThis;
 const loreMcpApp = createLoreMcpApp(runtimeGlobal);

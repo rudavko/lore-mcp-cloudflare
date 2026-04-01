@@ -124,6 +124,7 @@ function createRuntimeOps(core, deps, env) {
 		hybridSearchOrch: deps.hybridSearchOrch,
 		semanticSearchPort: createSemanticSearchPort({
 			aiRun: host.aiRun,
+			embeddingModelId: host.embeddingModelId,
 			vectorQuery: host.vectorQuery,
 			semanticMinScore: host.semanticMinScore,
 			std,
@@ -134,6 +135,7 @@ function createRuntimeOps(core, deps, env) {
 		}),
 		syncEmbeddingPort: createSyncEmbeddingPort({
 			aiRun: host.aiRun,
+			embeddingModelId: host.embeddingModelId,
 			vectorizeUpsert: host.vectorizeUpsert,
 			syncEmbeddingOrch: deps.syncEmbeddingOrch,
 		}),

@@ -6,8 +6,7 @@ import { makeDefaultHandlerFetch } from "./default-handler.orch.1.js";
 import { makeInstallWorkflowToRepoRuntime } from "./github-workflow-adapter.efct.js";
 import { installWorkflowToRepo } from "lore-mcp/domain/github-workflow.ops.efct.js";
 import { normalizeRepoFullName, parseTargetRepo, renderWorkflowYaml } from "lore-mcp/domain/github-workflow.pure.js";
-import { AUTO_UPDATES_LINK_PREFIX } from "lore-mcp/domain/auto-updates-link.pure.js";
-import { extractHiddenInputValue } from "lore-mcp/test-helpers/html-scrape.test.js";
+import { extractHiddenInputValue } from "../test-helpers/html-scrape.helper.js";
 import {
 	createDefaultHandlerDeps,
 	createMemoryKv,
@@ -17,7 +16,7 @@ import {
 import {
 	applySetCookies,
 	buildCookieHeader,
-} from "lore-mcp/test-helpers/http-cookies.test.js";
+} from "../test-helpers/http-cookies.helper.js";
 
 function createSensitiveBtoa() {
 	return () => {
@@ -87,7 +86,10 @@ function buildHandler(targetRepo) {
 					jsonStringify: JSON.stringify,
 				}),
 				normalizeRepoFullName,
-				readAutoUpdatesSetupToken: async () => null,
+				readAutoUpdatesSetupToken: async (token) =>
+					token === "setup-token-1"
+						? { targetRepo, expiresAtMs: Date.now() + 60_000 }
+						: null,
 			},
 		}),
 	);
@@ -112,10 +114,8 @@ async function handlerFetchWithCookies({ handler, env, jar, path, init }) {
 test("admin install-workflow e2e succeeds even when injected btoa is this-sensitive", async () => {
 	const targetRepo = "owner/repo";
 	const handler = buildHandler(targetRepo);
-	const kv = createMemoryKv();
-	await kv.put(AUTO_UPDATES_LINK_PREFIX + "setup-token-1", targetRepo);
 	const env = {
-		OAUTH_KV: kv,
+		OAUTH_KV: createMemoryKv(),
 		ACCESS_PASSPHRASE: "test-pass",
 	};
 

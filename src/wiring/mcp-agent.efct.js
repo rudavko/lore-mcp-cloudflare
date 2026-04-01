@@ -1,6 +1,4 @@
 /** @implements FR-001 — Build MCP agent constructor from injected base agent type and runtime hooks. */
-/** Sentinel for TDD hook. */
-export const _MODULE = "mcp-agent.efct";
 export function createLoreMcpCtor(deps) {
 	return new deps.proxyCtor(deps.McpAgentCtor, {
 		construct: (target, args, newTarget) => {

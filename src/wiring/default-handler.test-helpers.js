@@ -25,8 +25,8 @@ import {
 	extractHotpCode,
 	validateTotpFormat,
 } from "lore-mcp/totp.pure.js";
-export { readSetCookies } from "lore-mcp/test-helpers/http-cookies.test.js";
-export { createMemoryKv } from "../test-helpers/http-kv-context.test.js";
+export { readSetCookies } from "../test-helpers/http-cookies.helper.js";
+export { createMemoryKv } from "../test-helpers/http-kv-context.helper.js";
 
 export const RequestCtor = globalThis.Request;
 export const ResponseCtor = globalThis.Response;

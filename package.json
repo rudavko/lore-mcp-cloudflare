@@ -1,4 +1,12 @@
 {
+  "tyn-es": {
+    "exclude": [
+      ".trash",
+      ".wrangler",
+      ".stryker-tmp",
+      ".stryker-system-tmp"
+    ]
+  },
   "name": "lore-mcp-cloudflare",
   "version": "0.0.1",
   "private": true,
@@ -11,13 +19,14 @@
     "cf-typegen": "wrangler types",
     "build-hash": "node scripts/buildHash.js",
     "install-workflow": "bun scripts/installWorkflow.js",
+    "lint": "tyn-es .",
     "test": "bun test"
   },
   "dependencies": {
     "@cloudflare/workers-oauth-provider": "0.2.3",
     "@simplewebauthn/server": "13.2.2",
     "agents": "0.4.0",
-    "lore-mcp": "github:rudavko/lore-mcp#4595309078e63f48348f7180bf49c516a31d997b",
+    "lore-mcp": "github:rudavko/lore-mcp#main",
     "qrcode-svg": "1.1.0",
     "zod": "4.3.6"
   },

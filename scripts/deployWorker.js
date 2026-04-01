@@ -1,5 +1,6 @@
 import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
+import { createRequire } from "node:module";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -9,6 +10,7 @@ import { resolveTargetRepo } from "./targetRepo.js";
 const wrangler = "./node_modules/.bin/wrangler";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const wranglerConfigPath = resolve(__dirname, "..", "wrangler.jsonc");
+const require = createRequire(import.meta.url);
 
 function runWrangler(args) {
 	execFileSync(wrangler, args, {
@@ -21,13 +23,23 @@ function hasCommittedRemoteD1Id() {
 	return /"database_id"\s*:/u.test(readFileSync(wranglerConfigPath, "utf8"));
 }
 
-export function buildDeployArgs(targetRepo, buildHash, extraArgs) {
+export function readInstalledLorePackageVersion() {
+	const packagePath = require.resolve("lore-mcp/package.json");
+	const packageJson = JSON.parse(readFileSync(packagePath, "utf8"));
+	return typeof packageJson.version === "string" && packageJson.version.length > 0
+		? packageJson.version
+		: "unknown";
+}
+
+export function buildDeployArgs(targetRepo, buildHash, appVersion, extraArgs) {
 	return [
 		"deploy",
 		"--var",
 		`TARGET_REPO:${targetRepo}`,
 		"--var",
 		`BUILD_HASH:${buildHash}`,
+		"--var",
+		`APP_VERSION:${appVersion}`,
 		...extraArgs,
 	];
 }
@@ -35,12 +47,13 @@ export function buildDeployArgs(targetRepo, buildHash, extraArgs) {
 function main(argv) {
 	const targetRepo = resolveTargetRepo();
 	const buildHash = computeRepoBuildHash();
+	const appVersion = readInstalledLorePackageVersion();
 	if (hasCommittedRemoteD1Id()) {
 		runWrangler(["d1", "migrations", "apply", "DB", "--remote"]);
 	} else {
 		console.log("Skipping remote D1 migrations apply because wrangler.jsonc has no database_id.");
 	}
-	runWrangler(buildDeployArgs(targetRepo, buildHash, argv));
+	runWrangler(buildDeployArgs(targetRepo, buildHash, appVersion, argv));
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {

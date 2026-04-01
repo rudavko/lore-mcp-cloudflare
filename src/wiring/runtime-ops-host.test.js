@@ -1,7 +1,7 @@
 /** @implements FR-001 — Verify runtime-ops host adapter translates env into stable ports. */
 import { describe, expect, test } from "bun:test";
 import { createRuntimeOpsHostDeps } from "./runtime-ops-host.orch.4.js";
-import { createGlobalTestStd } from "lore-mcp/test-helpers/runtime.shared.test.js";
+import { createGlobalTestStd } from "../test-helpers/runtime.shared.helper.js";
 
 const std = createGlobalTestStd(globalThis);
 
@@ -16,12 +16,14 @@ describe("wiring/runtime-ops-host", () => {
 				query: async (vector, options) => ({ matches: [], vector, options }),
 				upsert: async (vectors) => vectors.length,
 			},
+			EMBEDDING_MODEL_ID: "@cf/override-model",
 			SEMANTIC_MIN_SCORE: "0.77",
 			EMBEDDING_MAX_RETRIES: "8",
 		};
 		const host = createRuntimeOpsHostDeps(env, { std });
 
 		expect(host.db).toBe(env.DB);
+		expect(host.embeddingModelId).toBe("@cf/override-model");
 		expect(host.embeddingMaxRetries).toBe(8);
 		expect(host.semanticMinScore).toBe("0.77");
 		expect(await host.aiRun("m", { x: 1 })).toEqual({ model: "m", input: { x: 1 } });
