@@ -8,7 +8,7 @@
         "@cloudflare/workers-oauth-provider": "0.2.3",
         "@simplewebauthn/server": "13.2.2",
         "agents": "0.4.0",
-        "lore-mcp": "github:rudavko/lore-mcp#v0.2.0",
+        "lore-mcp": "github:rudavko/lore-mcp#v0.2.1",
         "qrcode-svg": "1.1.0",
         "zod": "4.3.6",
       },
@@ -383,7 +383,7 @@
 
     "lodash": ["lodash@4.17.23", "", {}, "sha512-LgVTMpQtIopCi79SJeDiP0TfWi5CNEc/L/aRdTh3yIvmZXTnheWpKjSZhnvMl8iXbC1tFg9gdHHDMLoV7CnG+w=="],
 
-    "lore-mcp": ["lore-mcp@github:rudavko/lore-mcp#bfce70a", { "dependencies": { "zod": "^4.3.6" } }, "rudavko-lore-mcp-bfce70a", "sha512-mfU++QnzevH31/WhXS26+iH+0oNFzmnkDuu7NvmyiSkeXcJSj5SN3ptAhfy9EUKHyo3vJobVdrPkzGXST3oN/Q=="],
+    "lore-mcp": ["lore-mcp@github:rudavko/lore-mcp#8ea468b", { "dependencies": { "zod": "^4.3.6" } }, "rudavko-lore-mcp-8ea468b", "sha512-IKcEt6UsmAvz+Ekb9kqRSp+w3egbxcrSaeBtVuavejleK3UKLdgypgeJ5fc6T8e46tDhHuBwlGTrAx2mpcQNAQ=="],
 
     "math-intrinsics": ["math-intrinsics@1.1.0", "", {}, "sha512-/IXtbwEk5HTPyEwyKX6hGkYXxM9nbj64B+ilVJnC/R6B0pH5G4V3b0pVbL7DBj4tkhBAppbQUlf6F6Xl9LHu1g=="],
 
