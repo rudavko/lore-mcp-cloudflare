@@ -88,6 +88,7 @@ export function createDefaultHandlerRequestContext(deps, request, host, helpers)
 	const parseUrl = (value) => new platform.urlCtor(value);
 	const getClientIp = () => host.clientIp;
 	const getAuthKv = () => kv;
+	const getDb = () => host.db;
 	const getOauthProvider = () => oauthProvider;
 	const getAccessPassphrase = () => accessPassphrase;
 	const isIpLocked = async () => {
@@ -127,6 +128,7 @@ export function createDefaultHandlerRequestContext(deps, request, host, helpers)
 		parseUrl,
 		getClientIp,
 		getAuthKv,
+		getDb,
 		getOauthProvider,
 		getAccessPassphrase,
 		isIpLocked,

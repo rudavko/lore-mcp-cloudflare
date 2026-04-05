@@ -3,14 +3,14 @@
  *
  * Resolution order for the target repo:
  * 1) argv[2] as explicit owner/repo
- * 2) TARGET_REPO env var (owner/repo)
+ * 2) MANUAL_DEPLOY_TARGET_REPO env var (owner/repo)
  *
  * Required env:
  *   GITHUB_TOKEN=...
  *
  * Usage:
  *   node scripts/installWorkflow.js owner/repo
- *   TARGET_REPO=owner/repo node scripts/installWorkflow.js
+ *   MANUAL_DEPLOY_TARGET_REPO=owner/repo node scripts/installWorkflow.js
  */
 
 import { Buffer } from "node:buffer";

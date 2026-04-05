@@ -1,6 +1,10 @@
 /** @implements FR-001 — Host adapter builder for tool-layer env/binding concerns. */
 import { parsePositiveInteger } from "lore-mcp/wiring/runtime-value-helpers.orch.3.js";
-import { safeStringEqual } from "lore-mcp/lib/constant-time-equal.pure.js";
+import { readAutoUpdatesInstallState } from "./auto-updates-install-state.efct.js";
+import {
+	createAutoUpdatesTokenDeps,
+	issueAutoUpdatesSetupToken as issueShellAutoUpdatesSetupToken,
+} from "./auto-updates-token.efct.js";
 
 function resolveBuildHash(env) {
 	const candidates = [env.BUILD_HASH, env.WORKERS_CI_COMMIT_SHA, env.CF_PAGES_COMMIT_SHA];
@@ -12,6 +16,28 @@ function resolveBuildHash(env) {
 	return "unknown";
 }
 
+function resolveAutoUpdatesInstallContext(env) {
+	if (typeof env.AUTO_UPDATES_REPO_FULL_NAME === "string" && env.AUTO_UPDATES_REPO_FULL_NAME.length > 0) {
+		return {
+			mode: "exact_repo",
+			repo: env.AUTO_UPDATES_REPO_FULL_NAME,
+		};
+	}
+	if (
+		typeof env.AUTO_UPDATES_REPO_BRANCH === "string" &&
+		env.AUTO_UPDATES_REPO_BRANCH.length > 0 &&
+		typeof env.AUTO_UPDATES_REPO_COMMIT_SHA === "string" &&
+		env.AUTO_UPDATES_REPO_COMMIT_SHA.length > 0
+	) {
+		return {
+			mode: "workers_build_ref",
+			branch: env.AUTO_UPDATES_REPO_BRANCH,
+			commitSha: env.AUTO_UPDATES_REPO_COMMIT_SHA,
+		};
+	}
+	return null;
+}
+
 function createToolsHostDeps(env, deps) {
 	const accessPassphrase =
 		typeof env.ACCESS_PASSPHRASE === "string" ? env.ACCESS_PASSPHRASE : "";
@@ -19,29 +45,32 @@ function createToolsHostDeps(env, deps) {
 		db: env.DB,
 		buildHash: resolveBuildHash(env),
 		embeddingMaxRetries: parsePositiveInteger(env.EMBEDDING_MAX_RETRIES, 5, deps.std),
-		resolveAutoUpdatesTargetRepo: async () => {
-			const envTargetRepo = typeof env.TARGET_REPO === "string" ? env.TARGET_REPO : "";
-			return deps.normalizeRepoFullName(envTargetRepo) || "";
-		},
+		readAutoUpdatesInstallState: async () => await readAutoUpdatesInstallState(env.DB),
+		resolveAutoUpdatesInstallContext: async () => resolveAutoUpdatesInstallContext(env),
 		vectorizeDeleteByIds: env.VECTORIZE_INDEX ? (ids) => env.VECTORIZE_INDEX.deleteByIds(ids) : undefined,
 		issueAutoUpdatesSetupToken: (targetRepo, expiresAtMs) =>
-			deps.issueAutoUpdatesSetupToken(targetRepo, expiresAtMs, {
-				accessPassphrase,
-				cryptoLike: deps.cryptoLike,
-				textEncoderCtor: deps.textEncoderCtor,
-				textDecoderCtor: deps.textDecoderCtor,
-				uint8ArrayCtor: deps.uint8ArrayCtor,
-				arrayFrom: deps.std.Array.from,
-				stringFromCharCode: deps.std.String.fromCharCode,
-				numberIsFinite: deps.std.Number.isFinite,
-				btoa: deps.std.btoa,
-				atob: deps.std.atob,
-				jsonStringify: deps.jsonStringify,
-				jsonParse: deps.jsonParse,
-				nowMs: deps.std.Date.now,
-				safeStringEqual,
-			}),
+			issueShellAutoUpdatesSetupToken(
+				targetRepo,
+				expiresAtMs,
+				createAutoUpdatesTokenDeps(
+					{
+						cryptoLike: deps.cryptoLike,
+						textEncoderCtor: deps.textEncoderCtor,
+						textDecoderCtor: deps.textDecoderCtor,
+						uint8ArrayCtor: deps.uint8ArrayCtor,
+						arrayFrom: deps.std.Array.from,
+						stringFromCharCode: deps.std.String.fromCharCode,
+						numberIsFinite: deps.std.Number.isFinite,
+						btoa: deps.std.btoa,
+						atob: deps.std.atob,
+						jsonStringify: deps.jsonStringify,
+						jsonParse: deps.jsonParse,
+						nowMs: deps.std.Date.now,
+					},
+					accessPassphrase,
+				),
+			),
 	};
 }
 
-export { createToolsHostDeps, resolveBuildHash };
+export { createToolsHostDeps, resolveAutoUpdatesInstallContext, resolveBuildHash };

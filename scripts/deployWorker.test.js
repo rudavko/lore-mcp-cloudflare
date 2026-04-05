@@ -12,11 +12,9 @@ describe("scripts/deployWorker", () => {
 		expect(readInstalledLorePackageVersion()).toBe(lorePackageJson.version);
 	});
 
-	test("bakes APP_VERSION alongside TARGET_REPO and BUILD_HASH", () => {
-		expect(buildDeployArgs("owner/repo", "build-123", "0.2.0", ["--minify"])).toEqual([
+	test("bakes APP_VERSION alongside BUILD_HASH", () => {
+		expect(buildDeployArgs("build-123", "0.2.0", ["--minify"])).toEqual([
 			"deploy",
-			"--var",
-			"TARGET_REPO:owner/repo",
 			"--var",
 			"BUILD_HASH:build-123",
 			"--var",

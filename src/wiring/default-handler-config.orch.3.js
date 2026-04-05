@@ -12,12 +12,6 @@ import {
 	renderWorkflowYaml,
 	normalizeRepoFullName,
 } from "lore-mcp/domain/github-workflow.pure.js";
-import { readAutoUpdatesSetupToken } from "lore-mcp/domain/auto-updates-token.efct.js";
-import {
-	signPayloadBase64Url,
-	encodeTokenPayload,
-	decodeTokenPayload,
-} from "lore-mcp/domain/auto-updates-token-codec.efct.js";
 import {
 	FAIL_WINDOW_TTL_SECONDS,
 	LOCKOUT_TTL_SECONDS,
@@ -28,13 +22,17 @@ import {
 	isLockoutReached,
 	byteValuesToHexString,
 } from "lore-mcp/lib/auth-helpers.pure.js";
-import { safeStringEqual } from "lore-mcp/lib/constant-time-equal.pure.js";
 import { registerAuthRoutes } from "lore-mcp/auth.orch.1.js";
-import { registerAdminRoutes } from "lore-mcp/admin.orch.1.js";
 import { renderAuthPage } from "lore-mcp/templates/auth-page.pure.js";
 import { renderEnrollPasskeyPage } from "lore-mcp/templates/enroll-passkey.pure.js";
 import { renderEnrollTotpPage } from "lore-mcp/templates/enroll-totp.pure.js";
-import { renderInstallWorkflowPage } from "lore-mcp/templates/install-workflow.pure.js";
+import { registerAdminRoutes } from "./admin-routes.orch.1.js";
+import { renderInstallWorkflowPage } from "./install-workflow-page.pure.js";
+import { discoverDeployRepo } from "./discover-deploy-repo.efct.js";
+import {
+	createAutoUpdatesTokenDeps,
+	readAutoUpdatesSetupToken,
+} from "./auto-updates-token.efct.js";
 import {
 	PASSKEY_CRED_KEY,
 	CHALLENGE_TTL_SECONDS,
@@ -139,24 +137,40 @@ function createUi() {
 }
 
 function createAdmin(runtimeGlobal) {
+	const workflowRuntime = makeInstallWorkflowToRepoRuntime({
+		installWorkflowToRepo,
+		discoverDeployRepo,
+		parseTargetRepo,
+		renderWorkflowYaml,
+		btoa: runtimeGlobal.btoa.bind(runtimeGlobal),
+		githubFetchApi: (input, init) => runtimeGlobal.fetch(input, init),
+		jsonStringify: runtimeGlobal.JSON.stringify,
+	});
 	return {
-		installWorkflowToRepo: makeInstallWorkflowToRepoRuntime({
-			installWorkflowToRepo,
-			parseTargetRepo,
-			renderWorkflowYaml,
-			btoa: runtimeGlobal.btoa.bind(runtimeGlobal),
-			githubFetchApi: (input, init) => runtimeGlobal.fetch(input, init),
-			jsonStringify: runtimeGlobal.JSON.stringify,
-		}),
+		installWorkflowToRepo: workflowRuntime.installWorkflowToRepo,
+		discoverDeployRepo: workflowRuntime.discoverDeployRepo,
 		normalizeRepoFullName,
 		readAutoUpdatesSetupToken: (token, tokenDeps) =>
-			readAutoUpdatesSetupToken(token, {
-				...tokenDeps,
-				safeStringEqual,
-				signPayloadBase64Url,
-				encodeTokenPayload,
-				decodeTokenPayload,
-			}),
+			readAutoUpdatesSetupToken(
+				token,
+				createAutoUpdatesTokenDeps(
+					{
+						cryptoLike: tokenDeps.cryptoLike,
+						textEncoderCtor: tokenDeps.textEncoderCtor,
+						textDecoderCtor: tokenDeps.textDecoderCtor,
+						uint8ArrayCtor: tokenDeps.uint8ArrayCtor,
+						arrayFrom: tokenDeps.arrayFrom,
+						stringFromCharCode: tokenDeps.stringFromCharCode,
+						numberIsFinite: tokenDeps.numberIsFinite,
+						btoa: tokenDeps.btoa,
+						atob: tokenDeps.atob,
+						jsonStringify: JSON.stringify,
+						jsonParse: tokenDeps.jsonParse,
+						nowMs: tokenDeps.nowMs,
+					},
+					tokenDeps.accessPassphrase,
+				),
+			),
 	};
 }
 

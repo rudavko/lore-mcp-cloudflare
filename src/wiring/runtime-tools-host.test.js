@@ -20,7 +20,6 @@ describe("wiring/runtime-tools-host", () => {
 				DB: { label: "db" },
 				BUILD_HASH: "build-42",
 				EMBEDDING_MAX_RETRIES: "9",
-				TARGET_REPO: "rudavko/lore-mcp-d1",
 				ACCESS_PASSPHRASE: "secret",
 				VECTORIZE_INDEX: {
 					deleteByIds: async (ids) => ids.length,
@@ -45,9 +44,10 @@ describe("wiring/runtime-tools-host", () => {
 		expect(host.db).toEqual({ label: "db" });
 		expect(host.buildHash).toBe("build-42");
 		expect(host.embeddingMaxRetries).toBe(9);
-		expect(await host.resolveAutoUpdatesTargetRepo()).toBe("rudavko/lore-mcp-d1");
 		expect(await host.vectorizeDeleteByIds(["a", "b"])).toBe(2);
-		expect(host.issueAutoUpdatesSetupToken("repo", 123)).toBe("token");
-		expect(issued).toHaveLength(1);
+		const token = await host.issueAutoUpdatesSetupToken("repo", 123);
+		expect(typeof token).toBe("string");
+		expect(token.includes(".")).toBe(true);
+		expect(issued).toHaveLength(0);
 	});
 });

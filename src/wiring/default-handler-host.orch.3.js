@@ -3,6 +3,7 @@ function createDefaultHandlerHost(request, env) {
 	const envRec = env && typeof env === "object" ? env : {};
 	return {
 		authKv: envRec.OAUTH_KV,
+		db: envRec.DB,
 		oauthProvider: envRec.OAUTH_PROVIDER || {},
 		accessPassphrase:
 			typeof envRec.ACCESS_PASSPHRASE === "string" ? envRec.ACCESS_PASSPHRASE : "",

@@ -1,4 +1,13 @@
 /** @implements FR-011 — Build admin-route dependencies from request-local default-handler context. */
+import {
+	claimAutoUpdatesSetupToken,
+	completeAutoUpdatesSetupTokenClaim,
+	isAutoUpdatesSetupTokenConsumed,
+	readAutoUpdatesInstallState,
+	recordAutoUpdatesInstallState,
+	releaseAutoUpdatesSetupTokenClaim,
+} from "./auto-updates-install-state.efct.js";
+
 function createPrefixedRouter(router, prefix) {
 	return {
 		get: (path, handler) => {
@@ -17,11 +26,9 @@ function createDefaultHandlerAdminRouteDeps(ctx) {
 	const ui = ctx.config.ui;
 	const accessPassphrase = ctx.http.getAccessPassphrase();
 	const kv = ctx.http.getAuthKv();
+	const db = ctx.http.getDb();
 
 	return {
-		kvGet: (key) => authState.kvGet(kv, key),
-		kvPut: (key, value, ttlSeconds) => authState.kvPutTtl(kv, key, value, ttlSeconds),
-		kvDelete: (key) => authState.kvDelete(kv, key),
 		setCookie: ctx.http.setCookie,
 		getCookie: ctx.http.getCookie,
 		randomToken: ctx.helpers.randomTokenHex,
@@ -30,6 +37,7 @@ function createDefaultHandlerAdminRouteDeps(ctx) {
 		isIpLocked: ctx.http.isIpLocked,
 		clearAuthFailures: ctx.http.clearAuthFailures,
 		installWorkflowToRepo: admin.installWorkflowToRepo,
+		discoverDeployRepo: admin.discoverDeployRepo,
 		normalizeRepoFullName: (repoName) => admin.normalizeRepoFullName(repoName) || "",
 		readAutoUpdatesSetupToken: (token) =>
 			admin.readAutoUpdatesSetupToken(token, {
@@ -46,6 +54,22 @@ function createDefaultHandlerAdminRouteDeps(ctx) {
 				jsonParse: platform.jsonParse,
 				nowMs: platform.nowMs,
 			}),
+		isAutoUpdatesSetupTokenConsumed: (setupToken) =>
+			isAutoUpdatesSetupTokenConsumed(db, setupToken),
+		claimAutoUpdatesSetupToken: async (setupToken, expiresAtMs) =>
+			await claimAutoUpdatesSetupToken(
+				db,
+				setupToken,
+				expiresAtMs,
+				ctx.helpers.randomTokenHex(),
+				platform.nowMs(),
+			),
+		releaseAutoUpdatesSetupTokenClaim: (setupToken, claimId) =>
+			releaseAutoUpdatesSetupTokenClaim(db, setupToken, claimId),
+		completeAutoUpdatesSetupTokenClaim: (setupToken, claimId) =>
+			completeAutoUpdatesSetupTokenClaim(db, setupToken, claimId, platform.nowMs()),
+		recordAutoUpdatesInstallState: (state) => recordAutoUpdatesInstallState(db, state),
+		readAutoUpdatesInstallState: () => readAutoUpdatesInstallState(db),
 		renderInstallWorkflowPage: ui.renderInstallWorkflowPage,
 		parseBody: ctx.http.parseBody,
 		queryParam: ctx.http.queryParam,

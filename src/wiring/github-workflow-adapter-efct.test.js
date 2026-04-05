@@ -6,7 +6,7 @@ describe("wiring/github-workflow-adapter.efct", () => {
 	test("adapts parseTargetRepo and githubFetch helpers for installWorkflowToRepo", async () => {
 		const fetchCalls = [];
 		let injected = null;
-		const install = makeInstallWorkflowToRepoRuntime({
+		const workflowRuntime = makeInstallWorkflowToRepoRuntime({
 			installWorkflowToRepo: async (token, targetRepo, adapterDeps) => {
 				injected = adapterDeps;
 				return { ok: true, token, targetRepo };
@@ -38,7 +38,7 @@ describe("wiring/github-workflow-adapter.efct", () => {
 			},
 		});
 
-		const result = await install("token", "owner/repo");
+		const result = await workflowRuntime.installWorkflowToRepo("token", "owner/repo");
 
 		expect(result).toEqual({ ok: true, token: "token", targetRepo: "owner/repo" });
 		expect(injected.parseTargetRepo("bad")).toEqual({ error: "bad target" });
@@ -82,7 +82,7 @@ describe("wiring/github-workflow-adapter.efct", () => {
 
 	test("reads response.json with the response bound as this", async () => {
 		let responseRef = null;
-		const install = makeInstallWorkflowToRepoRuntime({
+		const workflowRuntime = makeInstallWorkflowToRepoRuntime({
 			installWorkflowToRepo: async (_token, _targetRepo, adapterDeps) => {
 				return await adapterDeps.githubFetch("/repos/owner/repo", "token");
 			},
@@ -98,14 +98,14 @@ describe("wiring/github-workflow-adapter.efct", () => {
 			},
 		});
 
-		const result = await install("token", "owner/repo");
+		const result = await workflowRuntime.installWorkflowToRepo("token", "owner/repo");
 		expect(responseRef).not.toBeNull();
 		expect(result).toEqual({ status: 200, ok: true, body: { ok: true } });
 	});
 
 	test("encodes workflow YAML without depending on an injected btoa binding", async () => {
 		let encoded = "";
-		const install = makeInstallWorkflowToRepoRuntime({
+		const workflowRuntime = makeInstallWorkflowToRepoRuntime({
 			installWorkflowToRepo: async (_token, _targetRepo, adapterDeps) => {
 				encoded = adapterDeps.btoa("name: Upstream Sync\n");
 				return { ok: true };
@@ -120,8 +120,41 @@ describe("wiring/github-workflow-adapter.efct", () => {
 			}),
 		});
 
-		await install("token", "owner/repo");
+		await workflowRuntime.installWorkflowToRepo("token", "owner/repo");
 
 		expect(encoded).toBe("bmFtZTogVXBzdHJlYW0gU3luYwo=");
+	});
+
+	test("adapts githubFetch helpers for discoverDeployRepo", async () => {
+		let injected = null;
+		const workflowRuntime = makeInstallWorkflowToRepoRuntime({
+			installWorkflowToRepo: async () => ({ ok: true }),
+			discoverDeployRepo: async (token, _installContext, adapterDeps) => {
+				injected = adapterDeps;
+				return { ok: true, token };
+			},
+			parseTargetRepo: () => ({ error: null, owner: "owner", repo: "repo" }),
+			renderWorkflowYaml: (targetRepo) => `yaml:${targetRepo}`,
+			jsonStringify: JSON.stringify,
+			githubFetchApi: async () => ({
+				status: 200,
+				ok: true,
+				json: async () => ({ ok: true }),
+			}),
+		});
+
+		const result = await workflowRuntime.discoverDeployRepo("token", {
+			mode: "workers_build_ref",
+			branch: "main",
+			commitSha: "buildsha",
+		});
+
+		expect(result).toEqual({ ok: true, token: "token" });
+		expect(await injected.githubFetch("/user/repos", "token")).toEqual({
+			status: 200,
+			ok: true,
+			body: { ok: true },
+		});
+		expect(await injected.getBody({ body: { list: true } })).toEqual({ list: true });
 	});
 });

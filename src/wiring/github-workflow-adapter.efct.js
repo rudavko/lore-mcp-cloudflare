@@ -42,6 +42,10 @@ export function makeInstallWorkflowToRepoRuntime(deps) {
 		}
 		return { owner: parsed.owner, repo: parsed.repo };
 	}
+	const encodeUriComponent =
+		typeof deps.encodeUriComponent === "function"
+			? deps.encodeUriComponent
+			: encodeURIComponent;
 	async function githubFetch(path, githubToken, init) {
 		let response;
 		try {
@@ -85,16 +89,34 @@ export function makeInstallWorkflowToRepoRuntime(deps) {
 				parseTargetRepo: parseTargetRepoAdapter,
 				renderWorkflowYaml: deps.renderWorkflowYaml,
 				btoa: encodeBase64Ascii,
+				atob: globalThis.atob.bind(globalThis),
 				githubFetch,
 				getBody,
+				encodeUriComponent,
 				jsonStringify: deps.jsonStringify,
 			});
 		} catch (error) {
 			throw new Error("installWorkflowToRepoRuntime: " + errorMessage(error));
 		}
 	}
-	return async (token, targetRepo) => {
-		const result = await callInstallWorkflowToRepo(token, targetRepo);
-		return result;
+	async function callDiscoverDeployRepo(token, installContext) {
+		try {
+			return await deps.discoverDeployRepo(token, installContext, {
+				parseTargetRepo: parseTargetRepoAdapter,
+				githubFetch,
+				getBody,
+				atob: globalThis.atob.bind(globalThis),
+				encodeUriComponent,
+			});
+		} catch (error) {
+			return { ok: false, error: "discoverDeployRepoRuntime: " + errorMessage(error) };
+		}
+	}
+	return {
+		installWorkflowToRepo: async (token, targetRepo) => {
+			const result = await callInstallWorkflowToRepo(token, targetRepo);
+			return result;
+		},
+		discoverDeployRepo: async (token, installContext) => callDiscoverDeployRepo(token, installContext),
 	};
 }

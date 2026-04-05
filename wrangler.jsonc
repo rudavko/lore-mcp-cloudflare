@@ -41,7 +41,9 @@
 	"vectorize": [
 		{
 			"binding": "VECTORIZE_INDEX",
-			"index_name": "lore-mcp-embeddings"
+			"index_name": "lore-mcp-embeddings",
+			"dimensions": 768,
+			"metric": "cosine"
 		}
 	],
 	"assets": {

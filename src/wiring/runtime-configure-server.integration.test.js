@@ -69,7 +69,6 @@ describe("wiring/runtime configureLoreServer integration", () => {
 		await configureLoreServer(server, {
 			DB: {},
 			ACCESS_PASSPHRASE: "test-pass",
-			TARGET_REPO: "owner/example-repo",
 			BUILD_HASH: "build-hash-123",
 		});
 
@@ -98,8 +97,9 @@ describe("wiring/runtime configureLoreServer integration", () => {
 		await configureLoreServer(server, {
 			DB: {},
 			ACCESS_PASSPHRASE: "test-pass",
-			TARGET_REPO: "owner/example-repo",
 			BUILD_HASH: "build-hash-xyz",
+			AUTO_UPDATES_REPO_BRANCH: "main",
+			AUTO_UPDATES_REPO_COMMIT_SHA: "buildsha",
 		});
 
 		const result = await tools.get("engine_check").handler({ action: "help" });
@@ -114,8 +114,9 @@ describe("wiring/runtime configureLoreServer integration", () => {
 		await configureLoreServer(server, {
 			DB: {},
 			ACCESS_PASSPHRASE: "test-pass",
-			TARGET_REPO: "owner/example-repo",
 			BUILD_HASH: "build-hash-xyz",
+			AUTO_UPDATES_REPO_BRANCH: "main",
+			AUTO_UPDATES_REPO_COMMIT_SHA: "buildsha",
 		});
 
 		const result = await tools.get("engine_check").handler(
@@ -130,7 +131,9 @@ describe("wiring/runtime configureLoreServer integration", () => {
 			},
 		);
 		const text = extractText(result);
-		expect(text).toContain("Target repo: owner/example-repo");
+		expect(text).toContain(
+			"Target repo verification: use a fine-grained GitHub PAT scoped to exactly one deploy repo.",
+		);
 		expect(text).toContain("https://lore.example.com/admin/install-workflow?setup_token=");
 	});
 
@@ -141,8 +144,9 @@ describe("wiring/runtime configureLoreServer integration", () => {
 		await configureLoreServer(server, {
 			DB: {},
 			ACCESS_PASSPHRASE: "test-pass",
-			TARGET_REPO: "owner/example-repo",
 			BUILD_HASH: "build-hash-xyz",
+			AUTO_UPDATES_REPO_BRANCH: "main",
+			AUTO_UPDATES_REPO_COMMIT_SHA: "buildsha",
 		});
 
 		const result = await tools.get("engine_check").handler({ action: "auto_updates_status" });
@@ -151,9 +155,9 @@ describe("wiring/runtime configureLoreServer integration", () => {
 		expect(resourceItem).toBeDefined();
 		const payload = JSON.parse(resourceItem.resource.text);
 		expect(payload.action).toBe("auto_updates_status");
-		expect(payload.configured).toBe(true);
-		expect(payload.target_repo).toBe("owner/example-repo");
-		expect(payload.installation_state).toBe("unknown");
+		expect(payload.configured).toBe(false);
+		expect(payload.target_repo).toBeNull();
+		expect(payload.installation_state).toBe("not_installed");
 	});
 
 	test("configured object_create entity path uses the injected upsert entity runtime", async () => {
@@ -187,7 +191,6 @@ describe("wiring/runtime configureLoreServer integration", () => {
 		await configureLoreServer(server, {
 			DB: {},
 			ACCESS_PASSPHRASE: "test-pass",
-			TARGET_REPO: "owner/example-repo",
 			BUILD_HASH: "build-hash-xyz",
 		});
 

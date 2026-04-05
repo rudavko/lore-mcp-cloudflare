@@ -26,3 +26,11 @@ Why it exists:
 ## Deployment
 
 This package is intended to be the repo that Cloudflare deploys from. A later updater flow can bump the core package version here and let Cloudflare rebuild and redeploy from this Cloudflare package.
+
+## Updates
+
+- `.github/workflows/upstream-sync.yml` is the committed dependency-bump workflow for this deploy shell
+- `bun run repin-lore-mcp` repins `dependencies.lore-mcp` to the latest tagged `rudavko/lore-mcp` release and refreshes `bun.lock`
+- deployed workers can also install the same workflow into a downstream deploy repo through `engine_check(action="enable_auto_updates")`
+- the public one-click deploy path verifies the install target from the recorded Workers Builds branch + commit plus a fine-grained PAT scoped to exactly one writable repo
+- the installed workflow opens or updates a dependency-bump pull request instead of pushing directly to the default branch

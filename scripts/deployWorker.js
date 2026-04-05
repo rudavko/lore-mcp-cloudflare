@@ -31,29 +31,58 @@ export function readInstalledLorePackageVersion() {
 		: "unknown";
 }
 
-export function buildDeployArgs(targetRepo, buildHash, appVersion, extraArgs) {
-	return [
+export function buildDeployArgs(buildHash, appVersion, extraArgs, installContext = null) {
+	const args = [
 		"deploy",
-		"--var",
-		`TARGET_REPO:${targetRepo}`,
 		"--var",
 		`BUILD_HASH:${buildHash}`,
 		"--var",
 		`APP_VERSION:${appVersion}`,
-		...extraArgs,
 	];
+	if (installContext?.mode === "workers_build_ref") {
+		args.push("--var", `AUTO_UPDATES_REPO_BRANCH:${installContext.branch}`);
+		args.push("--var", `AUTO_UPDATES_REPO_COMMIT_SHA:${installContext.commitSha}`);
+	}
+	if (installContext?.mode === "exact_repo") {
+		args.push("--var", `AUTO_UPDATES_REPO_FULL_NAME:${installContext.repo}`);
+	}
+	return [...args, ...extraArgs];
 }
 
 function main(argv) {
-	const targetRepo = resolveTargetRepo();
 	const buildHash = computeRepoBuildHash();
 	const appVersion = readInstalledLorePackageVersion();
+	let installContext = null;
+	if (
+		typeof process.env.WORKERS_CI_BRANCH === "string" &&
+		process.env.WORKERS_CI_BRANCH.length > 0 &&
+		typeof process.env.WORKERS_CI_COMMIT_SHA === "string" &&
+		process.env.WORKERS_CI_COMMIT_SHA.length > 0
+	) {
+		installContext = {
+			mode: "workers_build_ref",
+			branch: process.env.WORKERS_CI_BRANCH,
+			commitSha: process.env.WORKERS_CI_COMMIT_SHA,
+		};
+	} else {
+		try {
+			const manualRepo = resolveTargetRepo({ log: () => {} });
+			if (manualRepo) {
+				installContext = {
+					mode: "exact_repo",
+					repo: manualRepo,
+				};
+			}
+		} catch {
+			// Leave auto-updates install unavailable when no verified deploy repo context exists.
+		}
+	}
 	if (hasCommittedRemoteD1Id()) {
 		runWrangler(["d1", "migrations", "apply", "DB", "--remote"]);
 	} else {
 		console.log("Skipping remote D1 migrations apply because wrangler.jsonc has no database_id.");
 	}
-	runWrangler(buildDeployArgs(targetRepo, buildHash, appVersion, argv));
+	runWrangler(buildDeployArgs(buildHash, appVersion, argv, installContext));
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
